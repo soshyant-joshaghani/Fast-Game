@@ -1,0 +1,22 @@
+{
+  "name": "fast-game",
+  "private": true,
+  "version": "0.1.0",
+  "workspaces": [
+    "frontend",
+    "game"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w frontend",
+    "dev:game": "npm run start -w game",
+    "build": "npm run build -w frontend",
+    "build:game": "npm run build -w game",
+    "check": "npm run check -w frontend",
+    "test": "vitest run --config tests/frontend/vitest.config.ts",
+    "test:game": "npm run test -w game",
+    "test:watch": "vitest --config tests/frontend/vitest.config.ts"
+  },
+  "devDependencies": {
+    "vitest": "^3.2.4"
+  }
+}

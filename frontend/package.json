@@ -1,0 +1,39 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite build",
+    "start": "node build",
+    "preview": "vite preview",
+    "prepare": "svelte-kit sync || echo ''",
+    "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json"
+  },
+  "dependencies": {
+    "@babylonjs/core": "^8.40.1",
+    "@babylonjs/gui": "^8.40.1",
+    "@babylonjs/inspector": "^8.40.1",
+    "@babylonjs/loaders": "^8.40.1",
+    "@babylonjs/node-geometry-editor": "^8.40.1",
+    "@colyseus/schema": "^4.0.7",
+    "@colyseus/sdk": "^0.17.35",
+    "gsap": "^3.15.0",
+    "pixi.js": "^8.18.1"
+  },
+  "devDependencies": {
+    "@sveltejs/adapter-node": "^5.5.2",
+    "@sveltejs/kit": "^2.50.2",
+    "@sveltejs/vite-plugin-svelte": "^6.2.4",
+    "@tailwindcss/vite": "^4.1.18",
+    "@types/node": "^22",
+    "svelte": "^5.54.0",
+    "svelte-check": "^4.4.2",
+    "tailwindcss": "^4.1.18",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "@colyseus/loadtest": "^0.17.7",
+    "@colyseus/testing": "^0.17.10"
+  }
+}

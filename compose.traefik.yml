@@ -1,0 +1,49 @@
+# Traefik edge proxy — included by compose.yml (production).
+#
+# Before first prod deploy:
+#   docker network create traefik-public
+#
+# Edge-only:
+#   docker compose -f compose.traefik.yml up -d
+
+services:
+  proxy:
+    image: traefik:3.6
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8090:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - traefik-public-certificates:/certificates
+    command:
+      - --providers.docker
+      - --providers.docker.constraints=Label(`traefik.constraint-label`, `traefik-public`)
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=traefik-public
+      - --entrypoints.http.address=:80
+      - --entrypoints.https.address=:443
+      - --certificatesresolvers.le.acme.email=admin@example.com
+      - --certificatesresolvers.le.acme.storage=/certificates/acme.json
+      - --certificatesresolvers.le.acme.tlschallenge=true
+      - --accesslog
+      - --log
+      - --api
+      - --api.insecure=true
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik-public
+      - traefik.constraint-label=traefik-public
+      - traefik.http.middlewares.https-redirect.redirectscheme.scheme=https
+      - traefik.http.middlewares.https-redirect.redirectscheme.permanent=true
+    networks:
+      - traefik-public
+      - default
+
+volumes:
+  traefik-public-certificates:
+
+networks:
+  traefik-public:
+    name: traefik-public

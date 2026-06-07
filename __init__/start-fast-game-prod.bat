@@ -1,0 +1,13 @@
+@echo off
+setlocal
+cd /d "%~dp0.."
+if not exist .env copy /Y .env.example .env >nul 2>&1
+docker network inspect traefik-public >nul 2>&1 || docker network create traefik-public
+docker compose up -d --build
+if errorlevel 1 exit /b 1
+echo.
+echo fast-game production stack started.
+echo Update DOMAIN in compose.yml, ACME email in compose.traefik.yml, and DNS before going live.
+echo Game server: wss://game.example.com  or  game.example.com:2567
+pause
+endlocal
