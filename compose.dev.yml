@@ -10,6 +10,7 @@
 #   http://dashboard.localhost  → localhost:5173
 #   http://game.localhost       → localhost:2567  (ws://game.localhost)
 #   http://adminer.localhost    → adminer container
+# Adminer login: server `db`, port 5432, credentials from .env (not localhost:15432). See Readme.md.
 # Traefik dashboard: http://localhost:8090
 #
 # Direct Colyseus: ws://localhost:2567

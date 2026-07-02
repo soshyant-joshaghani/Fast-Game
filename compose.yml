@@ -13,6 +13,8 @@
 #      game          A       <VM IP>     → wss://game.example.com or game.example.com:2567
 #      adminer       A       <VM IP>     → https://adminer.example.com (optional)
 #
+# Adminer login (prod): server `db`, port 5432, credentials from .env — not localhost.
+#
 # 3. docker network create traefik-public   (once per VM)
 
 name: fast-game

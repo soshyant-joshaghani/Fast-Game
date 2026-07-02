@@ -13,6 +13,7 @@ Fork or clone when starting a new game project. Includes a minimal Colyseus temp
 | Game server | Colyseus 0.17 (port **2567**) | ws://game.localhost · ws://localhost:2567 |
 | Database | Postgres 18 | localhost:15432 |
 | Proxy | Traefik 3.6 | http://localhost:8090 |
+| Adminer | Adminer (via Traefik) | http://adminer.localhost |
 
 ## Quick start (dev)
 
@@ -36,12 +37,54 @@ __init__/start-fast-game-dev.sh
 | Monitor | http://game.localhost/monitor |
 | Playground | http://game.localhost/playground |
 | Colyseus demo | http://dashboard.localhost/demo/colyseus |
+| Adminer | http://adminer.localhost |
 
 Stop app processes by closing their terminal windows. Stop infrastructure:
 
 ```bat
 docker compose -f compose.dev.yml down
 ```
+
+### Adminer and database connections
+
+Adminer runs **inside Docker**. Host tools (IDE, local pytest, pgAdmin on Windows) and Adminer use **different** host/port values — both are correct for their context.
+
+| Context | Server | Port | Credentials |
+|---------|--------|------|-------------|
+| **Adminer** (browser → Docker) | `db` | `5432` (internal) | `POSTGRES_USER` / `POSTGRES_PASSWORD` from `.env` |
+| **Host / IDE** (Windows, local scripts) | `localhost` | `15432` (published) | same `.env` values |
+
+**Do not use `localhost:15432` in Adminer** — inside the Adminer container, `localhost` is the Adminer container itself, not Postgres. You will get `Connection refused`.
+
+#### Adminer login (dev)
+
+Open `http://adminer.localhost`. System: **PostgreSQL**.
+
+```
+System:   PostgreSQL
+Server:   db
+Username: postgres          # POSTGRES_USER from .env
+Password: <POSTGRES_PASSWORD from .env>
+Database: app               # POSTGRES_DB from .env
+```
+
+Default values are in `.env.example` (`POSTGRES_DB=app`, `POSTGRES_USER=postgres`).
+
+#### Adminer login (production)
+
+Open `https://adminer.<your-domain>` (see DNS table below). Use the same **Server** (`db`), **Username**, **Password**, and **Database** as in `.env` — not `localhost`.
+
+#### Troubleshooting
+
+- **`Connection refused` on `localhost:15432` in Adminer** — use server `db` and port `5432`.
+- **`password authentication failed`** — network is fine; retype the password manually (watch for keyboard layout on `@`). Uncheck “Permanent login” or use a private window if the browser cached old credentials.
+- **Password changed in `.env` but login still fails** — Postgres sets the password only when the volume is first created. Either reset it:
+
+  ```bash
+  docker compose -f compose.dev.yml exec db psql -U postgres -d app -c "ALTER USER postgres PASSWORD 'your-new-password';"
+  ```
+
+  or wipe dev volumes and recreate: `docker compose -f compose.dev.yml down -v` then start again.
 
 ## Production (single VM)
 
