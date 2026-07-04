@@ -1,0 +1,63 @@
+# foxg-front workspace (root) — applies to all packages below.
+
+# Dependencies
+node_modules/
+
+# Bun / npm artifacts
+*.tgz
+
+# SvelteKit / Vite outputs
+**/.svelte-kit/
+**/build/
+**/.output/
+.vercel
+.netlify
+.wrangler
+
+# Generated Paraglide messages
+**/src/lib/paraglide/
+
+# Inlang (per-package project.inlang; cache is local)
+**/project.inlang/cache/
+
+# Vite temp config snapshots
+**/vite.config.js.timestamp-*
+**/vite.config.ts.timestamp-*
+
+# Environment — .env is gitignored; templates are committed
+.env
+.env.local
+!.env.development
+!.env.production
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE / editors
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Logs & debug
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Test / coverage
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Optional local Compose overrides
+compose.override.yml
+
+# Misc tooling
+.turbo/
+.cache/
