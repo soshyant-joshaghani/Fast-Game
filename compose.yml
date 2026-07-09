@@ -1,7 +1,10 @@
 # Production — single VM (backend + frontend + game + Traefik + Postgres)
 #
 #   cp .env.example .env
-#   __init__/start-fast-game-prod.bat
+#   __init__/start-fast-game-prod.sh
+#
+# Stop:  __init__/stop-fast-game-prod.sh
+# Reset: __init__/reset-fast-game-prod.sh  (wipe DB/Redis + app images; keeps ./letsencrypt/)
 #
 # 1. Set DOMAIN below (e.g. example.com) and x-prod-app-config URLs/CORS.
 # 2. Point DNS A records at the VM public IP (CDN optional — origin is the VM):

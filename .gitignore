@@ -14,3 +14,4 @@ htmlcov/
 frontend/.svelte-kit/
 frontend/build/
 .DS_Store
+letsencrypt/

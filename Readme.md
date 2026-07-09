@@ -93,6 +93,19 @@ bash __init__/setup-ubuntu.sh
 bash __init__/start-fast-game-prod.sh
 ```
 
+### Stop / reset (production)
+
+| Script | What it does |
+|--------|----------------|
+| `__init__/stop-fast-game-prod.sh` | Stops all prod containers. Keeps DB, Redis, and SSL. |
+| `__init__/reset-fast-game-prod.sh` | Wipes **db-data** + **redis-data** volumes and **backend/frontend/game :prod** images. Keeps Traefik/Postgres/Redis base images and `./letsencrypt/acme.json`. |
+
+Windows: same names with `.bat`.
+
+SSL lives in `./letsencrypt/acme.json` (bind mount, gitignored). Do **not** use `docker system prune -a --volumes` — use the reset script instead.
+
+Recover from legacy named volume: `bash __init__/migrate-letsencrypt-from-volume.sh`
+
 DNS (point at VM IP):
 
 | Host | Serves |
@@ -113,6 +126,7 @@ fast-game/
 ├── game/             Colyseus server template (game-test sample room)
 ├── compose.dev.yml   Dev infra only
 ├── compose.yml       Prod stack (backend + frontend + game + db)
+├── letsencrypt/      Prod ACME certs (acme.json — gitignored)
 └── __init__/         setup + start scripts
 ```
 

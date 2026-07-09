@@ -2,6 +2,10 @@
 #
 # Before first prod deploy:
 #   docker network create traefik-public
+#   mkdir -p letsencrypt && touch letsencrypt/acme.json && chmod 600 letsencrypt/acme.json
+#
+# Certificates live in ./letsencrypt/ (bind mount) so `docker volume prune` / compose down -v
+# does not wipe Let's Encrypt state. Directory is gitignored — back it up separately.
 #
 # Edge-only:
 #   docker compose -f compose.traefik.yml up -d
@@ -16,7 +20,7 @@ services:
       - "8090:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - traefik-public-certificates:/certificates
+      - ./letsencrypt:/certificates
     command:
       - --providers.docker
       - --providers.docker.constraints=Label(`traefik.constraint-label`, `traefik-public`)
@@ -40,9 +44,6 @@ services:
     networks:
       - traefik-public
       - default
-
-volumes:
-  traefik-public-certificates:
 
 networks:
   traefik-public:

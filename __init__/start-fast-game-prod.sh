@@ -4,6 +4,7 @@ cd "$(cd "$(dirname "$0")/.." && pwd)"
 if [[ ! -f .env ]]; then
   cp -n .env.example .env 2>/dev/null || true
 fi
+source "$(dirname "$0")/lib/ensure-letsencrypt.sh"
 docker network inspect traefik-public >/dev/null 2>&1 || docker network create traefik-public
 docker compose up -d --build
 echo

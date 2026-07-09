@@ -122,6 +122,14 @@ if ! docker_cmd network inspect traefik-public >/dev/null 2>&1; then
   docker_cmd network create traefik-public
 fi
 
+# ── Let's Encrypt storage (bind mount — survives volume prune) ─────────────
+echo "==> Preparing ./letsencrypt for Traefik ACME..."
+mkdir -p letsencrypt
+if [[ ! -f letsencrypt/acme.json ]]; then
+  touch letsencrypt/acme.json
+fi
+chmod 600 letsencrypt/acme.json
+
 # ── Project env file ────────────────────────────────────────────────────────
 if [[ ! -f .env ]]; then
   echo "==> Creating .env from .env.example..."
@@ -147,7 +155,12 @@ echo "       api   → https://api.<domain>    (backend)"
 echo "       adminer → optional DB UI"
 echo
 echo "Deploy:"
-echo "  bash __init__/start-fast-svelte-prod.sh"
+echo "  bash __init__/start-fast-game-prod.sh"
+echo
+echo "Stop / reset (prod):"
+echo "  bash __init__/stop-fast-game-prod.sh   — stop containers, keep DB + SSL"
+echo "  bash __init__/reset-fast-game-prod.sh  — wipe DB/Redis + app images, keep SSL"
+echo "  Avoid: docker system prune -a --volumes  (deletes ALL volumes; use reset script instead)"
 echo
 
 if [[ "$NEED_RELOGIN" -eq 1 ]]; then
