@@ -98,11 +98,12 @@ bash __init__/start-fast-game-prod.sh
 | Script | What it does |
 |--------|----------------|
 | `__init__/stop-fast-game-prod.sh` | Stops all prod containers. Keeps DB, Redis, and SSL. |
-| `__init__/reset-fast-game-prod.sh` | Wipes **db-data** + **redis-data** volumes and **backend/frontend/game :prod** images. Keeps Traefik/Postgres/Redis base images and `./letsencrypt/acme.json`. |
+| `__init__/reset-fast-game-prod.sh` | Wipes **db-data** + **redis-data** + app `:prod` images; keeps SSL. |
+| `__init__/backup-acme.sh` | SSL → `../.foxg-ssl-backups/fast-game/acme.json` |
+| `__init__/restore-acme.sh` | Restore from parent backup |
+| `__init__/prune-docker-build.sh` | Backup SSL, then `docker builder prune -af` |
 
-Windows: same names with `.bat`.
-
-SSL lives in `./letsencrypt/acme.json` (bind mount, gitignored). Do **not** use `docker system prune -a --volumes` — use the reset script instead.
+Windows: `.bat` variants. Start script auto-restores SSL from parent backup if local file is empty.
 
 Recover from legacy named volume: `bash __init__/migrate-letsencrypt-from-volume.sh`
 

@@ -5,11 +5,10 @@ cd "$(cd "$(dirname "$0")/.." && pwd)"
 
 source "$(dirname "$0")/lib/ensure-letsencrypt.sh"
 
-if [[ -f letsencrypt/acme.json ]] && [[ -s letsencrypt/acme.json ]]; then
-  backup="letsencrypt/acme.json.bak.$(date +%Y%m%d-%H%M%S)"
-  cp -a letsencrypt/acme.json "$backup"
-  echo "Backed up SSL state to $backup"
-fi
+echo "Backing up SSL outside repo..."
+# shellcheck source=lib/acme-backup.sh
+source "$(dirname "$0")/lib/acme-backup.sh"
+acme_backup_to_parent || true
 
 echo "Stopping production stack..."
 docker compose down --remove-orphans
@@ -35,7 +34,8 @@ docker image prune -f >/dev/null || true
 echo
 echo "Reset complete."
 echo "  Kept: traefik:3.6, postgres:18, redis:8-alpine, adminer images"
-echo "  Kept: ./letsencrypt/acme.json"
+echo "  Kept: ./letsencrypt/acme.json + ../.foxg-ssl-backups/$(basename "$(pwd)")/"
 echo "  Wiped: db-data, redis-data, app :prod images"
 echo
-echo "Start fresh: bash __init__/start-fast-game-prod.sh"
+echo "Free build cache: bash __init__/prune-docker-build.sh"
+echo "Start fresh:      bash __init__/start-fast-game-prod.sh"
